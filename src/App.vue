@@ -1,11 +1,6 @@
 <template>
   <div>
-    <b-navbar style="border: 2px solid #ffe08a">
-      <template #brand>
-        <b-navbar-item tag="a" target="_blank" :href="logo">
-          <img :src="logo" style="min-height: 85px" />
-        </b-navbar-item>
-      </template>
+    <b-navbar style="border-bottom: 1px solid #7957d5">
       <template #start>
         <b-navbar-item><strong>Generador de códigos QR</strong></b-navbar-item>
       </template>
@@ -88,11 +83,6 @@
           <div class="card has-text-centered">
             <header class="card-header">
               <p class="card-header-title">Previsualización</p>
-              <button class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </button>
             </header>
             <div class="card-content">
               <div class="content">
@@ -104,13 +94,17 @@
               </div>
             </div>
           </div>
+          <br />
+          <div class="card has-text-centered">
+            <div class="card-content"></div>
+          </div>
         </div>
       </div>
-      <p>
+      <b-notification type="is-info" :closable="false">
         Con este generador de códigos QR puedes personalizar el contenido (URL,
         texto, número telefónico, enlace a página de Facebook) del código QR así
         como el tamaño, colores, calidad y transparencia
-      </p>
+      </b-notification>
     </section>
     <footer class="footer">
       <div class="content has-text-centered">
