@@ -98,7 +98,9 @@
               <div class="content">
                 <img alt="Código QR generado por la app" id="codigo" />
                 <br />
-                <b-button type="is-success">Descargar</b-button>
+                <b-button @click="descargar()" type="is-success"
+                  >Descargar</b-button
+                >
               </div>
             </div>
           </div>
@@ -152,6 +154,12 @@ export default {
     },
   }),
   methods: {
+    descargar() {
+      const a = document.createElement("a");
+      a.href = document.querySelector("#codigo").src;
+      a.download = "Código QR.png";
+      a.click();
+    },
     actualizarCodigoQr() {
       this.qr.set({
         value: this.detallesQr.value,
