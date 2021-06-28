@@ -105,9 +105,9 @@
         </div>
       </div>
       <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellendus,
-        quas qui cum rerum molestiae animi ad doloribus earum! Iure praesentium,
-        atque harum autem quis suscipit et numquam repellat laborum ipsam.
+        Con este generador de códigos QR puedes personalizar el contenido (URL,
+        texto, número telefónico, enlace a página de Facebook) del código QR así
+        como el tamaño, colores, calidad y transparencia
       </p>
     </section>
     <footer class="footer">
