@@ -28,13 +28,60 @@
             message="Puede ser una URL, página de Facebook, texto, etcétera"
           >
             <b-input
-              @change.native="actualizarCodigoQr()"
-              v-model="detallesQr.contenido"
+              @keyup.native="actualizarCodigoQr()"
+              v-model="detallesQr.value"
+              ref="textareaContenido"
               type="textarea"
             ></b-input>
           </b-field>
-          <b-field label="Color">
-            <TwitterPicker :value="colors"></TwitterPicker>
+          <b-field grouped>
+            <b-field label="Calidad">
+              <b-select
+                @input="actualizarCodigoQr()"
+                placeholder="Seleccione"
+                v-model="detallesQr.level"
+              >
+                <option value="L">Baja</option>
+                <option value="M">Media</option>
+                <option value="Q">Alta</option>
+                <option value="H">Máxima</option>
+              </b-select>
+            </b-field>
+            <b-field
+              label="Tamaño de la imagen"
+              message="Aunque el tamaño no parezca cambiar, al descargar la imagen tendrá el tamaño seleccionado"
+            >
+              <b-slider
+                v-model="detallesQr.size"
+                :min="10"
+                @change="actualizarCodigoQr()"
+                :max="1000"
+              ></b-slider>
+            </b-field>
+          </b-field>
+          <b-field grouped>
+            <b-field label="Color del código">
+              <SeleccionadorColor
+                @input="onColorCambiado"
+                :value="colores"
+              ></SeleccionadorColor>
+            </b-field>
+
+            <b-field label="Color de fondo">
+              <SeleccionadorColor
+                @input="onColorDeFondoCambiado"
+                :value="coloresFondo"
+              ></SeleccionadorColor>
+            </b-field>
+            <b-field label="Opacidad del fondo">
+              <b-slider
+                v-model="detallesQr.backgroundAlpha"
+                :min="0"
+                :step="0.1"
+                @change="actualizarCodigoQr()"
+                :max="1"
+              ></b-slider>
+            </b-field>
           </b-field>
         </div>
         <div class="column is-one-third">
@@ -57,7 +104,6 @@
           </div>
         </div>
       </div>
-
       <p>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellendus,
         quas qui cum rerum molestiae animi ad doloribus earum! Iure praesentium,
@@ -77,44 +123,60 @@
 </template>
 
 <script>
+const colorPorDefecto = "#000000",
+  colorDeFondoPorDefecto = "#ffffff",
+  nivelCorrecionAlto = "H";
 import Logo from "./assets/logo.png";
 import QRious from "qrious";
-import { Twitter } from "vue-color";
+import { Sketch } from "vue-color";
 export default {
   components: {
-    TwitterPicker: Twitter,
+    SeleccionadorColor: Sketch,
   },
   name: "app",
   data: () => ({
     logo: Logo,
     detallesQr: {
-      contenido: "",
+      value: "",
+      foreground: colorPorDefecto,
+      background: colorDeFondoPorDefecto,
+      size: 200,
+      level: nivelCorrecionAlto,
     },
     qr: null,
-    colors: {
-      hex: "#194d33",
-      hex8: "#194D33A8",
-      hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-      hsv: { h: 150, s: 0.66, v: 0.3, a: 1 },
-      rgba: { r: 25, g: 77, b: 51, a: 1 },
-      a: 1,
+    colores: {
+      hex: colorPorDefecto,
+    },
+    coloresFondo: {
+      hex: colorDeFondoPorDefecto,
     },
   }),
   methods: {
     actualizarCodigoQr() {
-      console.log("Lo actualizo");
-      this.qr.value = this.detallesQr.contenido;
+      this.qr.set({
+        value: this.detallesQr.value,
+        foreground: this.detallesQr.foreground,
+        background: this.detallesQr.background,
+        size: this.detallesQr.size,
+        backgroundAlpha: this.detallesQr.backgroundAlpha,
+        level: this.detallesQr.level,
+      });
+    },
+    onColorCambiado(nuevoColor) {
+      this.detallesQr.foreground = nuevoColor.hex;
+      this.actualizarCodigoQr();
+    },
+    onColorDeFondoCambiado(nuevoColor) {
+      this.detallesQr.background = nuevoColor.hex;
+      this.actualizarCodigoQr();
     },
   },
   mounted() {
     this.qr = new QRious({
       element: document.querySelector("#codigo"),
-      // value: "https://parzibyte.me/blog",
-      // level: "H",
-      // size: 300,
-      // backgroundAlpha: 0,
     });
-    console.log(typeof QRious);
+    this.actualizarCodigoQr();
+    this.$refs.textareaContenido.focus();
   },
 };
 </script>
